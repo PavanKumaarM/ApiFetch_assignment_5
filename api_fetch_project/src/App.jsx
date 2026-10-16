@@ -132,55 +132,78 @@
 
 //API FETCH AND ITEREATING THROUGH BUTTON 
 
-// import React, { useState, useEffect } from "react";
-// import "./App.css";
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import Name from "./name.jsx";
 
-// function App() {
-//   const [data, setData] = useState([]);
-//   const [index, setIndex] = useState(0);
+function App() {
+  const [data, setData] = useState([]);
+  const [index, setIndex] = useState(0);
 
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       const response = await fetch(
-//         "https://jsonplaceholder.typicode.com/photos?_limit=10"
-//       );
-//       const data = await response.json();
-//       setData(data);
-//     };
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(
+        "https://jsonplaceholder.typicode.com/photos?_limit=10"
+      );
+      const data = await response.json();
+      setData((currentData) => [
+        ...data,
+        ...currentData.filter((item) => !item.thumbnailUrl),
+      ]);
+    };
 
-//     fetchData();
-//   }, []);
+    fetchData();
+  }, []);
+  
 
-//   console.log(data, "data");
+  const addName = (name) => {
+  const updatedData = [...data];
 
-//   return (
-//     <div className="container">
-//       <h1>Photo Gallery</h1>
+  updatedData.push(name);
 
-//       {data.length > 0 && (
-//         <div className="card">
-//           <img
-//             src={data[index].thumbnailUrl}
-//             alt={data[index].title}
-//           />
+  setData(updatedData);
+};
 
-//           <h2>{data[index].title}</h2>
+  console.log(data, "data");
 
-//           <p>Photo ID: {data[index].id}</p>
-//           <p>Album ID: {data[index].albumId}</p>
+  return (
+    <div className="container">
+      <h1>Photo Gallery</h1>
+      <Name onSubmit={addName} />
 
-//           <button
-//             onClick={() => setIndex((index + 1) % data.length)}
-//           >
-//             Next Photo
-//           </button>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
+      {data.length > 0 && (
+        <div className="card">
+          {data[index].thumbnailUrl ? (
+            <>
+              <img
+                src={data[index].thumbnailUrl}
+                alt={data[index].title}
+              />
 
-// export default App;
+              <h2>{data[index].title}</h2>
+              <p>Photo ID: {data[index].id}</p>
+              <p>Album ID: {data[index].albumId}</p>
+            </>
+          ) : (
+            <>
+              <h2>Name: {data[index].firstName}</h2>
+              <p>Email: {data[index].email}</p>
+              <p>Age: {data[index].age}</p>
+            </>
+          )}
+
+          <button
+            onClick={() => setIndex((index + 1) % data.length)}
+          >
+            Next Photo
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default App;
 
 ///////////////////////////////////////////////////////////////////
 
@@ -290,39 +313,5 @@
 // );}
 
 // export default App;
-
-import { useState } from "react";
-
-function App() {
-  const [form, setForm] = useState({ firstName: "", email: "", age: "" });
-  const [result, setResult] = useState(null);
-
-  const onChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-  const printValues = () => {
-    setResult(form);
-  };
-  return (
-    <>
-      <input placeholder=" name"name="firstName" value={form.firstName} onChange={onChange}/>
-      <input name="email" type="email" value={form.email} onChange={onChange}/>
-      <input name="age" type="number" value={form.age} onChange={onChange}/>
-      <button type="button" onClick={printValues}>
-        Print Values
-      </button>
-      {result && (
-        <div>
-          <h3>Name: {result.firstName}</h3>
-          <h3>Email: {result.email}</h3>
-          <h3>Age: {result.age}</h3>
-        </div>
-      )}
-    </>
-  );
-}
-
-export default App;
 
 
